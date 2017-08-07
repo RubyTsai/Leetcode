@@ -3,7 +3,7 @@ public:
     int findRotateSteps(string ring, string key) {
         rsize = ring.size();
         ksize = key.size();
-        if (0 != rsize || 0 != ksize) return 0;
+        if (0 == rsize || 0 == ksize) return 0;
         
         vector<vector<int>> states(ksize, vector<int>(rsize, INT_MAX));                
         for (int j = 0; j < rsize; j++) // init first state
