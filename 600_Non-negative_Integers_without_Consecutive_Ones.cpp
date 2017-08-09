@@ -20,7 +20,7 @@ public:
         if (bits[msb-1] == 1) {
             for (int i = 1, pow = 1; i < msb-1; i++, pow <<= 1) 
                 result += bits[i]==1? pow: 0;
-            result++;
+            result++; // the number itself
             result += msb-2 > 0 ? dp[msb-2]: 0;
         }
         else {
