@@ -7,13 +7,10 @@ public:
     int helper(vector<int>& price, vector<vector<int>>& special, vector<int>& needs, 
                unordered_map<int, int>& dp) {
         int key = needs[0];
-        int total = price[0] * needs[0];
-        for (int i = 1; i < needs.size(); i++) {
+        for (int i = 1; i < needs.size(); i++)
             key = key*10 + needs[i]; 
-            total += price[i] * needs[i];
-        }
         if (dp.find(key)!= dp.end()) return dp[key];         
-  
+        int total = inner_product(price.begin(), price.end(), needs.begin(), 0);
         
         for (int i = 0; i < special.size(); i++) {
             bool useTheSpecial = true;
