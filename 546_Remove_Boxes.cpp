@@ -12,19 +12,16 @@ public:
                 int j = i + length - 1;
                 for (int k = i; k <= j; k++) {
                     int same = 1;
-                    while (k+1 <= j && boxes[k+1] == boxes[k]) {
-                        k++;
+                    while (k+same <= j && boxes[k+same] == boxes[k]) {
                         same++;
                     }
-                    points = same*same;
-                    if (same == length) dp[i][j] = points;
-                    else {
-                        int seg0 = (k-1 < i)? 0: dp[i][k-1];
-                        int seg2 = (k+1 > j)? 0: dp[k+1][j];
-                        dp[i][j] = min(dp[i][j], seg0 + points + seg2);
-                    }
+                    int seg0 = (k-1 < i)? 0: dp[i][k-1];
+                    int seg1 = dp[k][k+same-1];
+                    int seg2 = (k+1 > j)? 0: dp[k+same][j];
+                    dp[i][j] = max(dp[i][j], seg0 + seg1 + seg2);                    
                 }
             }
         }
+        return dp[0][bsize-1];
     }
 };
