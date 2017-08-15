@@ -17,7 +17,7 @@ public:
                     }
                     int seg0 = (k-1 < i)? 0: dp[i][k-1];
                     int seg1 = dp[k][k+same-1];
-                    int seg2 = (k+1 > j)? 0: dp[k+same][j];
+                    int seg2 = (k+same > j)? 0: dp[k+same][j];
                     dp[i][j] = max(dp[i][j], seg0 + seg1 + seg2);                    
                 }
             }
