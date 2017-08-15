@@ -1,27 +1,29 @@
 class Solution {
 public:
     int removeBoxes(vector<int>& boxes) {
+        unordered_map<int, int> dp;
+        return helper(boxes, dp);
+    }    
+private:
+    int helper(vector<int>& boxes, unordered_map<int, int>& dp) {
         int bsize = boxes.size();
-        if (bsize == 0) return 0;
-        vector<vector<int>> dp(bsize, vector<int>(bsize, 0));
-        for (int i = 0; i < bsize; i++)
-            dp[i][i] = 1;
+        if (bsize == 0 || bsize == 1) return bsize;
+        int key = boxes[0];
+        for (int i = 1; i < bsize; i++) key = key * 10 + boxes[i];
+        if (dp.find(key) != dp.end()) return dp[key];
         
-        for (int length = 2; length <= bsize; length++) {
-            for (int i = 0; i <= bsize-length; i++) {
-                int j = i + length - 1;
-                for (int k = i; k <= j; k++) {
-                    int same = 1;
-                    while (k+same <= j && boxes[k+same] == boxes[k]) {
-                        same++;
-                    }
-                    int seg0 = (k-1 < i)? 0: dp[i][k-1];
-                    int seg1 = same * same;
-                    int seg2 = (k+same > j)? 0: dp[k+same][j];
-                    dp[i][j] = max(dp[i][j], seg0 + seg1 + seg2);                    
-                }
-            }
+        int points = 0;
+        int same = 1;
+        for (int i = 0; i < bsize; i += same) {
+            same = 1;
+            while (i + same < bsize && boxes[i+same] == boxes[i])
+                same++;
+            vector<int> newSeg;
+            for (int j = 0; j < i; j++) newSeg.push_back(boxes[j]);
+            for (int j = i+same; j < bsize; j++) newSeg.push_back(boxes[j]);
+            points = max(points, same*same + helper(newSeg, dp));
         }
-        return dp[0][bsize-1];
+        dp[key] = points;
+        return points;
     }
 };
