@@ -18,6 +18,6 @@ public:
                 dp[i][k] += dp[i-1][k];
             }
         }
-        return dp[nums][S];
+        return dp[nsize][S];
     } 
 };
