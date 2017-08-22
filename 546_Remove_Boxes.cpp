@@ -1,29 +1,27 @@
 class Solution {
 public:
     int removeBoxes(vector<int>& boxes) {
-        unordered_map<int, int> dp;
-        return helper(boxes, dp);
+        // 3 3 3 .... 3 ...
+        int dp[100][100][100] = {0};
+        return helper(boxes, dp, 0, boxes.size()-1, 0);
     }    
 private:
-    int helper(vector<int>& boxes, unordered_map<int, int>& dp) {
-        int bsize = boxes.size();
-        if (bsize == 0 || bsize == 1) return bsize;
-        int key = boxes[0];
-        for (int i = 1; i < bsize; i++) key = key * 10 + boxes[i];
-        if (dp.find(key) != dp.end()) return dp[key];
+    int helper(vector<int>& b, int (&dp)[100][100][100], int start, int end, int same) {
+        if (start > end) return 0;
+        if (dp[start][end][same] != 0) return dp[start][end][same];
         
-        int points = 0;
-        int same = 1;
-        for (int i = 0; i < bsize; i += same) {
-            same = 1;
-            while (i + same < bsize && boxes[i+same] == boxes[i])
-                same++;
-            vector<int> newSeg;
-            for (int j = 0; j < i; j++) newSeg.push_back(boxes[j]);
-            for (int j = i+same; j < bsize; j++) newSeg.push_back(boxes[j]);
-            points = max(points, same*same + helper(newSeg, dp));
-        }
-        dp[key] = points;
-        return points;
+        while (start < end && b[start+1] == b[start]) {
+            same++;
+            start++;
+        } // same = 2, start -> 2
+        // [3 3 3] [.... 3 ...]
+        dp[start][end][same] = (same+1) * (same+1) + helper(b ,dp, start+1, end, 0);
+        for (int i = start+1; i <= end; i++)
+            if (b[start] == b[i]) {
+                dp[start][end][same] = max(dp[start][end][same], 
+                                          //  3 3 3 [....] [3 ...] // 後面的 3 與前面連續的 3 合併在一起
+                                          helper(b, dp, start+1, i-1, 0) + helper(b, dp, i, end, same+1));
+            }
+        return dp[start][end][same];
     }
 };
