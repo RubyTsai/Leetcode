@@ -4,35 +4,34 @@ bool cmpLen(const string& a, const string& b) {
 class Solution {
 public:
     vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        vector<string> ret;
         sort(words.begin(), words.end(), cmpLen);
         
         int i= 0;
-        while(words[i].size() == 0) ++i;
-        minSize = words[i].size();
-        unordered_set<string> hashset(words.begin(), words.begin()+1);
-        
-        vector<string> ret;        
+        unordered_set<string> dict; 
+        while(words[i].size() == 0) ++i;               
         for (; i < words.size(); i++) {
-            if (words[i] == words[i-1]) continue;
-            if (words[i].size() > minSize) {
-                if (isCompose(words[i], 0, words[i].size()-1, hashset))
-                    ret.push_back(words[i]);
-            }
-            hashset.insert(words[i]);
+            if (helper(words[i], dict))
+                ret.push_back(words[i]);          
+            dict.insert(words[i]);
         }
         return ret;
     }
 private:
     int minSize;
-    bool isCompose(string& w, int begin, int end, unordered_set<string>& hashset) {
-        if (begin > end) return true;
-        for (int i = begin; i <= (end-minSize+1); i++) {
-            for (int j = i; j <= end; j++)
-                if (hashset.find(w.substr(i, j-i+1)) != hashset.end()) {
-                    if (isCompose(w, j+1, end, hashset)) return true;
-                } 
+    bool helper(string& w, unordered_set<string>& dict) {
+        if (dict.empty()) return false;
+        vector<bool> dp(w.size()+1, false);
+        dp[0] = true;
+        
+        for (int len = 1; len <= w.size(); len++) {
+            for (int j = len-1; j > 0; j--) {
+                if (dp[j]  && dict.find(w.substr(j+1, len-j)) != dict.end()) {
+                    dp[len] = true;
+                    break;
+                }
+            }                
         }
-        return false;
+        return dp[w.size()];
     }
-
 };
