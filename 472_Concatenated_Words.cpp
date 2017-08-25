@@ -25,8 +25,8 @@ private:
         dp[0] = true;
         
         for (int len = 1; len <= w.size(); len++) {
-            for (int j = len-1; j > 0; j--) {
-                if (dp[j]  && dict.find(w.substr(j+1, len-j)) != dict.end()) {
+            for (int j = len-1; j >= 0; j--) {
+                if (dp[j] && dict.find(w.substr(j, len-j)) != dict.end()) {
                     dp[len] = true;
                     break;
                 }
