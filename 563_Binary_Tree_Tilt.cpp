@@ -10,15 +10,16 @@
 class Solution {
 public:
     int findTilt(TreeNode* root) {
-        
+        int sum = 0;
+        return findTilt(root, sum);
     }
 private:
-    int findTilt(TreeNode* root, int& sumChildren) {
+    int findTilt(TreeNode* root, int& sum) {
         if (NULL == root) return 0;
         int sumLeft = 0, sumRight = 0;
         int tiltLeft = findTilt(root->left, sumLeft);
         int tiltRight = findTilt(root->right, sumRight);
-        sumChildren = sumLeft + sumRight;
-        return abs(sumLeft - sumRight) + tilt
+        sum = sumLeft + sumRight + root->val;
+        return abs(sumLeft - sumRight) + tiltLeft + tiltRight;
     }
 };
