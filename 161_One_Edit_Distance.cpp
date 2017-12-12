@@ -26,6 +26,6 @@ public:
         }
         //All previous chars are the same, the only possibility is deleting the end char in the longer one of s and t 
         int diff = ss >= ts? ss-ts: ts-ss;
-        return diff < 2;
+        return diff == 1;
     }
 };
